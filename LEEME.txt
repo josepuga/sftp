@@ -1,0 +1,8 @@
+Mira el tutorial en https://www.youtube.com/.....
+
+IMPORTANTE: Antes de nada, modifica las variables de files/config para adaptarlas a tus necesidades.
+
+Ficheros utilizados:
+    build.sh - Crea la imagen.
+    run.sh - Detiene el contenedor, lo borra y lo ejecuta.
+    syncronize-users.sh - Úsalo después de modificar files/users.conf para sincronizar los usuarios y quotas si no usaste la opción "Automatizar con Systemd".

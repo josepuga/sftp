@@ -1,0 +1,56 @@
+#!/bin/bash
+# Variables usadas en la creación y lanzamiento del servidor SFTP.
+# Modifícalas según tus necesidades.
+
+# Etiqueta para la imagen creada
+IMAGE_TAG=my-sftp
+
+# Nombre del contenedor
+CONTAINER_NAME=sftp-server
+
+# Directorio del host que será el /home de los distintos usuarios
+HOST_FTP_DIR=
+
+# Puerto de escucha. Usar el 22 requiere privilegios de root
+HOST_PORT=2222
+
+# Si se quiere usar un directorio común pub. IMPORTANTE: Si se desactivara,
+# esto no elimina los directorios pub/ que ya se hubieran creado
+USE_PUB=1
+
+# Permisos del directorio pub/. un valor de 1777 se comportará como el /tmp:
+# Todo el mundo puede imprimir, pero no puede borrar/modificar un fichero si
+# no es el propietario.
+PUB_PERMISSIONS=1777
+
+# Si se quieren usar quotas. IMPORTANTE: el sistema de ficheros del directorio
+# compartido debe ser XFS y haberse montado con la opción jgroups. 
+# Las cuotas se activan mediante un script en el host, no es posible hacerlo
+# en el contenedor porque usa una capa "Overlay" al usar el sist. de ficheros. 
+# ES LA ÚNICA PARTE DEL SERVIDOR QUE NECESITA PERMISOS DE ROOT.
+# Puedes evitar introducir el password si das al usuario en sudoers permiso para
+# ejecutar xfs_quota: <usuario> ALL=(ALL) NOPASSWD: /usr/sbin/xfs_quota
+USE_QUOTAS=0
+
+# La quota del directorio pub/. Si no se pone límite los usuarios podrían
+# acabar llenando el disco. Formato: tamaño[m|g]. 256m, 1g, ...
+PUB_QUOTA=1g
+
+# Este valor es necesario si en el host ya estuvieras usando una cuota con 
+# project groups y los IDs que estás usando en el contenedor presentaran conflicto
+# con los usados. Este valor se suma al ID de la quota (que tiene el mismo ID que
+# el ID del usuario). Déjalo a 0 si no usas quotas en la unidad del HOST_FTP_DIR
+QUOTA_ID_INC=0
+
+# Activándolo, mediante systemd Nivel usuario (que no requiere permisos de root),
+# el contendor se activará al reiniciar el sistema y permanecerá activo aunque el
+# usuario deslogué. Además, si se modificara desde el host el archivo 
+# files/users.conf, se activaría un "watcher" que reflejaría estos cambios 
+# directamente en el contendor. Si no se activa, hay que llamar manualmente a 
+# update-users.sh cuando se modifique users.conf y por supuesto lanzar el contendor
+# al reiniciar.
+USE_SYSTEMD=1
+
+# Si quieres que el instalador active las utilidades de systemd, sino, tendrás que
+# activarlo manualmente con systemctl --user enable (...) y systemctl --user start (...)
+SYSTEMD_AUTOACTIVATE=1

@@ -27,9 +27,7 @@ PUB_PERMISSIONS=1777
 # compartido debe ser XFS y haberse montado con la opción jgroups. 
 # Las cuotas se activan mediante un script en el host, no es posible hacerlo
 # en el contenedor porque usa una capa "Overlay" al usar el sist. de ficheros. 
-# ES LA ÚNICA PARTE DEL SERVIDOR QUE NECESITA PERMISOS DE ROOT.
-# Puedes evitar introducir el password si das al usuario en sudoers permiso para
-# ejecutar xfs_quota: <usuario> ALL=(ALL) NOPASSWD: /usr/sbin/xfs_quota
+# Para chequear las cuotas: xfs_quota -x -c 'report -ph' /punto_de_montaje
 USE_QUOTAS=0
 
 # La quota del directorio pub/. Si no se pone límite los usuarios podrían

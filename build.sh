@@ -48,7 +48,7 @@ run_service="sftp.service"
 # Watcher Path: Monitorea cambios en users.conf
 cat <<EOF > "$SYSTEMD_DIR/$watcher_path"
 [Unit]
-Description=Watcher for Easy SFTP
+Description=Watcher for SFTP Server
 
 [Path]
 PathChanged=${FILES_PATH}/users.conf
@@ -65,9 +65,9 @@ Description=Run Update users script for SFTP Server
 
 [Service]
 Type=oneshot
-ExecStart=${FILES_PATH}/update-users.sh
+ExecStart=${FILES_PATH}/../syncronize-users.sh
 EOF
-chmod +x ${FILES_PATH}/update-users.sh # Para asegurarnos...
+chmod +x ${FILES_PATH}/../syncronize-users.sh # Para asegurarnos...
 
 # Run Service: Ejecuta el contenedor al iniciar el sistema
 # NOTA: La forma más ortodoxa de hacerlo es mediante

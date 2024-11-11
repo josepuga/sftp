@@ -2,17 +2,22 @@
 # Variables usadas en la creación y lanzamiento del servidor SFTP.
 # Modifícalas según tus necesidades.
 
+# Directorio del host que será el /home de los distintos usuarios
+HOST_FTP_DIR=/mnt/data/sftp
+
+# Puerto de escucha. Usar el 22 requiere privilegios de root
+HOST_PORT=2222
+
 # Etiqueta para la imagen creada
 IMAGE_TAG=my-sftp
 
 # Nombre del contenedor
 CONTAINER_NAME=sftp-server
 
-# Directorio del host que será el /home de los distintos usuarios
-HOST_FTP_DIR=/mnt/data/sftp
-
-# Puerto de escucha. Usar el 22 requiere privilegios de root
-HOST_PORT=2222
+#
+# DIRECTORIO PÚBLICO
+# ==================
+#
 
 # Si se quiere usar un directorio común pub. IMPORTANTE: Si se desactivara,
 # esto no elimina los directorios pub/ que ya se hubieran creado
@@ -22,6 +27,11 @@ USE_PUB=1
 # Todo el mundo puede imprimir, pero no puede borrar/modificar un fichero si
 # no es el propietario.
 PUB_PERMISSIONS=1777
+
+#
+# CUOTAS DE DISCO
+# ===============
+#
 
 # Si se quieren usar quotas. IMPORTANTE: el sistema de ficheros del directorio
 # compartido debe ser XFS y haberse montado con la opción jgroups. 
@@ -41,6 +51,11 @@ PUB_QUOTA=1g
 # con los usados. Este valor se suma al ID de la quota (que tiene el mismo ID que
 # el ID del usuario). Déjalo a 0 si no usas quotas en la unidad del HOST_FTP_DIR
 QUOTA_ID_INC=0
+
+#
+# SYSTEMD
+# =======
+#
 
 # Activándolo, mediante systemd Nivel usuario (que no requiere permisos de root),
 # el contendor se activará al reiniciar el sistema y permanecerá activo aunque el

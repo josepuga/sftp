@@ -4,7 +4,7 @@ config :
     Es el fichero de configuración del servidor. Tienes que modificarlo a tus necesidades.
 
 users.conf :
-    Donde indicas los diferentes usuarios, los directorios que tendrán y las quotas de disco. Si modificas el fichero y quieres actualizar los datos sin reiniciar el servidor y no activaste systemd, ejecuta el script `syncronize-users.sh`. 
+    Donde indicas los diferentes usuarios, los directorios que tendrán y las quotas de disco. Si modificas el fichero y quieres actualizar los datos sin reiniciar el servidor, usa el script `syncronize-users.sh`. 
 
 
 Estos ficheros están aquí por información. No tienes que hacer nada con ellos.
@@ -12,15 +12,19 @@ Estos ficheros están aquí por información. No tienes que hacer nada con ellos
 create-pub-links.sh:
     Crea los directorios pub/ a los usuarios además del directorio público pub/
 
+create-quotas.sh
+    Crea las quotas para los usuarios.
+
 Dockerfile
     Evidente...
 
 entrypoint.sh
     Un wrap del /entrypoint, necesario porque después de lanzar el servidor hay que generar los pub/ y las quotas.
 
+
 ssh/
     Como cada vez que se lanza el contenedor genera unas claves ssh nuevas, la primera vez que se ejecuta build.sh se crean aquí y son las usadas en cada sesión.
 
 update-users.sh
-    Actualiza los usuarios cuando se modifica users.conf. Esto se hace desde el lado del HOST.
+    Actualiza los usuarios cuando se modifica users.conf.
 

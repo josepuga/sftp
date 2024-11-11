@@ -42,32 +42,31 @@ has_linger=$(loginctl show-user -p Linger admin 2>/dev/null | cut -d= -f2)
 # Unidades necesarias
 watcher_path="sftp-watcher-users.path"
 watcher_service="sftp-watcher-users.service"
-run_service="sftp.service"
+run_service="sftp-run.service"
 
 # Creación de los ficheros de systemd.
 # Watcher Path: Monitorea cambios en users.conf
 cat <<EOF > "$SYSTEMD_DIR/$watcher_path"
 [Unit]
-Description=Watcher for SFTP Server
+Description=Watcher for Easy SFTP
 
 [Path]
 PathChanged=${FILES_PATH}/users.conf
 
 [Install]
-# multi-user.target no funciona en el ámbito de usuario
-WantedBy=default.target
+WantedBy=multi-user.target
 EOF
 
 # Watcher Service: Ejecuta update-users.sh cuando el .path detecta un cambio
 cat <<EOF > "$SYSTEMD_DIR/$watcher_service"
 [Unit]
-Description=Run Update users script for SFTP Server
+Description=Run Update users script for Easy SFTP
 
 [Service]
 Type=oneshot
-ExecStart=${FILES_PATH}/../syncronize-users.sh
+ExecStart=${FILES_PATH}/update-users.sh
 EOF
-chmod +x ${FILES_PATH}/../syncronize-users.sh # Para asegurarnos...
+chmod +x ${FILES_PATH}/update-users.sh # Para asegurarnos...
 
 # Run Service: Ejecuta el contenedor al iniciar el sistema
 # NOTA: La forma más ortodoxa de hacerlo es mediante
@@ -75,7 +74,7 @@ chmod +x ${FILES_PATH}/../syncronize-users.sh # Para asegurarnos...
 #       Pero para tener una coherencia en el código uso el cat EOF
 cat <<EOF > "$SYSTEMD_DIR/$run_service"
 [Unit]
-Description=Run SFTP Server Container
+Description=Run Easy SFTP Puga Container
 
 [Service]
 ExecStart=${FILES_PATH%/*}/run.sh
@@ -83,15 +82,14 @@ Restart=always
 RestartSec=5
 
 [Install]
-# multi-user.target no funciona en el ámbito de usuario
-WantedBy=default.target
+WantedBy=multi-user.target
 EOF
 
 if [[ "$SYSTEMD_AUTOACTIVATE" == "1" ]]; then
     echo "Activando las unidades systemd..."
     # TODO: Check for errors
-    systemctl --user enable "$watcher_path" && systemctl --user start "$watcher_path"
-    systemctl --user enable "$run_service" && systemctl --user start "$run_service"
+    #systemctl --user enable "$watcher_unit" && systemctl --user start "$watcher_unit"
+    #systemctl --user enable "$service_unit" && systemctl --user start "$service_unit"
 else
     echo "Recuerda que debes activar manualmente $watcher_unit y $service con systemctl --user"
 fi

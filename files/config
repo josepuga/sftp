@@ -3,7 +3,7 @@
 # Modifícalas según tus necesidades.
 
 # Directorio del host que será el /home de los distintos usuarios
-HOST_FTP_DIR=/mnt/data/sftp
+HOST_FTP_DIR=
 
 # Puerto de escucha. Usar el 22 requiere privilegios de root
 HOST_PORT=2222

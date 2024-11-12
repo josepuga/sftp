@@ -9,7 +9,20 @@ set -e
 FILES_PATH="$(dirname "$(realpath "$0")")"/files
 source "$FILES_PATH/config"
 
-podman cp "$FILES_PATH/users.conf" "$CONTAINER_NAME":/etc/sftp/users.conf
+USERS_CONF_HOST_PATH="$FILES_PATH/users.conf"
+USERS_CONF_CONTAINER_PATH="/etc/sftp/users.conf"
+
+# Desmonta temporalmente el archivo para eliminar el bloqueo
+podman exec "$CONTAINER_NAME" bash -c "umount $USERS_CONF_CONTAINER_PATH || true"
+
+# Copia el archivo actualizado al contenedor
+podman cp "$USERS_CONF_HOST_PATH" "$CONTAINER_NAME":"$USERS_CONF_CONTAINER_PATH"
+
+# Reaplica el bind mount para actualizar el contenido en el contenedor sin reiniciar, 
+# permitiendo que el servidor SFTP lo vuelva a leer.
+podman exec "$CONTAINER_NAME" bash -c "mount --bind $USERS_CONF_CONTAINER_PATH $USERS_CONF_CONTAINER_PATH"
+
+# Se ejecuta el scritp dentro del contenedor para actualizar los usuarios
 podman exec "$CONTAINER_NAME" /usr/local/bin/update-users.sh
 
 # Debido al OverlayFS, es necesario crear las cuotas desde el host.

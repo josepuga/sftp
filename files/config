@@ -40,7 +40,7 @@ PUB_PERMISSIONS=1777
 # ES LA ÚNICA PARTE DEL SERVIDOR QUE NECESITA PERMISOS DE ROOT.
 # Puedes evitar introducir el password si das al usuario en sudoers permiso para
 # ejecutar xfs_quota: <usuario> ALL=(ALL) NOPASSWD: /usr/sbin/xfs_quota
-USE_QUOTAS=1
+USE_QUOTAS=0
 
 # La quota del directorio pub/. Si no se pone límite los usuarios podrían
 # acabar llenando el disco. Formato: tamaño[m|g]. 256m, 1g, ...
@@ -57,13 +57,12 @@ QUOTA_ID_INC=0
 # =======
 #
 
-# Activándolo, mediante systemd Nivel usuario (que no requiere permisos de root),
+# Activándolo, mediante systemd nivel usuario (que no requiere permisos de root),
 # el contendor se activará al reiniciar el sistema y permanecerá activo aunque el
 # usuario deslogué. Además, si se modificara desde el host el archivo 
 # files/users.conf, se activaría un "watcher" que reflejaría estos cambios 
-# directamente en el contendor. Si no se activa, hay que llamar manualmente a 
-# update-users.sh cuando se modifique users.conf y por supuesto lanzar el contendor
-# al reiniciar.
+# directamente en el contendor. Si no se activa, hay que ejecutar explícitamente
+# syncronize-users.sh cuando se modifique users.conf.
 USE_SYSTEMD=1
 
 # Si quieres que el instalador active las utilidades de systemd, sino, tendrás que

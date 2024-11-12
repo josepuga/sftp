@@ -54,7 +54,7 @@ Description=Watcher for Easy SFTP
 PathChanged=${FILES_PATH}/users.conf
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=default.target
 EOF
 
 # Watcher Service: Ejecuta update-users.sh cuando el .path detecta un cambio
@@ -82,14 +82,14 @@ Restart=always
 RestartSec=5
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=default.target
 EOF
 
 if [[ "$SYSTEMD_AUTOACTIVATE" == "1" ]]; then
     echo "Activando las unidades systemd..."
     # TODO: Check for errors
-    #systemctl --user enable "$watcher_unit" && systemctl --user start "$watcher_unit"
-    #systemctl --user enable "$service_unit" && systemctl --user start "$service_unit"
+    systemctl --user enable "$watcher_path" && systemctl --user start "$watcher_path"
+    systemctl --user enable "$run_service" && systemctl --user start "$run_service"
 else
     echo "Recuerda que debes activar manualmente $watcher_unit y $service con systemctl --user"
 fi

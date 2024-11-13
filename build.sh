@@ -77,9 +77,12 @@ cat <<EOF > "$SYSTEMD_DIR/$run_service"
 Description=Run Easy SFTP Puga Container
 
 [Service]
-ExecStart=${FILES_PATH%/*}/run.sh
-Restart=always
-RestartSec=5
+# Se usa forking ya que podman -d genera un proceso hijo y esperaría al proceso padre en su lugar
+Type=forking
+#RemainAfterExit=true
+#Restart=always
+#RestartSec=5
+ExecStart=${FILES_PATH%/*}/run.sh --systemd
 
 [Install]
 WantedBy=default.target

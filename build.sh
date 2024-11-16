@@ -1,6 +1,7 @@
 #!/bin/bash
 
-FILES_PATH="$(dirname "$(realpath "$0")")"/files
+BASE_PATH="$(dirname "$(realpath "$0")")"
+FILES_PATH="$BASE_PATH/files"
 source "$FILES_PATH/config"
 
 [[ "$HOST_FTP_DIR" == "" ]] && echo "Asigna el directorio FTP en $FILES_PATH/config" && exit 1
@@ -48,7 +49,7 @@ run_service="sftp-run.service"
 # Watcher Path: Monitorea cambios en users.conf
 cat <<EOF > "$SYSTEMD_DIR/$watcher_path"
 [Unit]
-Description=Watcher for Easy SFTP
+Description=Watcher for José Puga's SFTP Container
 
 [Path]
 PathChanged=${FILES_PATH}/users.conf
@@ -60,13 +61,13 @@ EOF
 # Watcher Service: Ejecuta update-users.sh cuando el .path detecta un cambio
 cat <<EOF > "$SYSTEMD_DIR/$watcher_service"
 [Unit]
-Description=Run Update users script for Easy SFTP
+Description=Run Update users script for José Puga's SFTP Container
 
 [Service]
 Type=oneshot
-ExecStart=${FILES_PATH}/update-users.sh
+ExecStart=${BASE_PATH}/syncronize-users.sh
 EOF
-chmod +x ${FILES_PATH}/update-users.sh # Para asegurarnos...
+chmod +x ${BASE_PATH}/syncronize-users.dsh # Para asegurarnos...
 
 # Run Service: Ejecuta el contenedor al iniciar el sistema
 # NOTA: La forma más ortodoxa de hacerlo es mediante
@@ -74,7 +75,7 @@ chmod +x ${FILES_PATH}/update-users.sh # Para asegurarnos...
 #       Pero para tener una coherencia en el código uso el cat EOF
 cat <<EOF > "$SYSTEMD_DIR/$run_service"
 [Unit]
-Description=Run Easy SFTP Puga Container
+Description=Run José Puga's SFTP Container
 
 [Service]
 # Se usa forking ya que podman -d genera un proceso hijo y esperaría al proceso padre en su lugar
@@ -97,3 +98,10 @@ else
     echo "Recuerda que debes activar manualmente $watcher_unit y $service con systemctl --user"
 fi
 
+# Un mensaje de aviso si se usaron cuotas.
+if [[ "$USE_QUOTAS" == "1" ]]; then
+    echo "Si usas cuotas, se te pedirá la clave de root, esto hará que falle el script de systemd, ya que no es interactivo."
+    echo "Puedes evitar problemas añadiendo la siguiente linea en sudores con el comando 'sudo visudo':"
+    echo "tu_usuario ALL=(ALL) NOPASSWD: /usr/sbin/xfs_quota"
+    echo "Siempre podrás ver las cuotas activas en la unidad con sudo xfs_quota -xc 'report -h /ruta/sftp/’"
+fi

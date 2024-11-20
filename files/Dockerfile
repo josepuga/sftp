@@ -2,6 +2,9 @@
 
 FROM atmoz/sftp
 
+# ACL es necesario para el usuario anonymous...
+RUN apt-get update && apt-get install -y acl
+
 # Contiene la lista de usuarios, que autom. sftp se encargará de crear
 COPY users.conf /etc/sftp/users.conf
 

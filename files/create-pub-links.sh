@@ -36,14 +36,14 @@ for user_home in /home/*; do
         [ ! -d "$user_home/pub" ] && mkdir "$user_home/pub" && \
 		chown $user_name:$group_name "$user_home/pub"
 
-        # El usuario anonymous si existiera, se trataría de forma especial.
-        # Se le quitan los permisos de escritura a su pub/
-        [[ "$user_name" == "anonymous" ]] && chmod 555 /home/anonymous/pub
-
         # Si no existe un montaje previo, crear un nuevo montaje
         if ! mountpoint -q "$user_home/pub"; then
    	     mount --bind "$PUB_DIR" "$user_home/pub"
         fi
+
+        # El usuario anonymous si existiera, se trataría de forma especial.
+        # Se le quitan los permisos de escritura a su pub/. Es necesario usar ACL
+        [[ "$user_name" == "anonymous" ]] && setfacl -R -m u:anonymous:rx -m m:rx "$user_home/pub"
     fi
 done
 # Este hack es porque al realizar mount --bind, se pierden los permisos de pub

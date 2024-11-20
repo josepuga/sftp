@@ -32,7 +32,7 @@ if [ "$USE_QUOTAS" = "1" ]; then
     # Se aplica la cuota al directorio pub. Como pub no es un usuario, no se
     # puede usar su uid como id. En su lugar voy a usar un id = a la velocidad
     # de la luz en m/s.
-set -x
+
     if [[ $PUB_QUOTA =~ ^[0-9]+[gm]$ ]]; then
         PUB_ID=299792458
         sudo xfs_quota -x -c "project -s -p $HOST_FTP_DIR/pub $PUB_ID"  "$MOUNT_POINT"

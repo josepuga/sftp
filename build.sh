@@ -67,7 +67,7 @@ Description=Run Update users script for José Puga's SFTP Container
 Type=oneshot
 ExecStart=${BASE_PATH}/syncronize-users.sh
 EOF
-chmod +x ${BASE_PATH}/syncronize-users.dsh # Para asegurarnos...
+chmod +x ${BASE_PATH}/syncronize-users.sh # Para asegurarnos...
 
 # Run Service: Ejecuta el contenedor al iniciar el sistema
 # NOTA: La forma más ortodoxa de hacerlo es mediante

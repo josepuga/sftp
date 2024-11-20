@@ -103,5 +103,5 @@ if [[ "$USE_QUOTAS" == "1" ]]; then
     echo "Si usas cuotas, se te pedirá la clave de root, esto hará que falle el script de systemd, ya que no es interactivo."
     echo "Puedes evitar problemas añadiendo la siguiente linea en sudores con el comando 'sudo visudo':"
     echo "tu_usuario ALL=(ALL) NOPASSWD: /usr/sbin/xfs_quota"
-    echo "Siempre podrás ver las cuotas activas en la unidad con sudo xfs_quota -xc 'report -h /ruta/sftp/’"
+    echo "Siempre podrás ver las cuotas activas en la unidad con sudo xfs_quota -xc 'report -h /ruta/sftp/'"
 fi

@@ -43,7 +43,7 @@ for user_home in /home/*; do
 
         # El usuario anonymous si existiera, se trataría de forma especial.
         # Se le quitan los permisos de escritura a su pub/. Es necesario usar ACL
-        [[ "$user_name" == "anonymous" ]] && setfacl -R -m u:anonymous:rx -m m:rx "$user_home/pub"
+        [[ "$user_name" == "anonymous" ]] && setfacl -R -m u:anonymous:r-x "$user_home/pub"
     fi
 done
 # Este hack es porque al realizar mount --bind, se pierden los permisos de pub

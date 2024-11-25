@@ -2,6 +2,9 @@
 
 FROM atmoz/sftp
 
+# Me han dado problemas otros repositorios, así que fuerzo el "más oficial"
+RUN echo "deb http://deb.debian.org/debian bullseye main" > /etc/apt/sources.list
+
 # ACL es necesario para el usuario anonymous...
 RUN apt-get update && apt-get install -y acl
 
